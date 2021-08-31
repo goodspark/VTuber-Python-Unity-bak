@@ -19,27 +19,25 @@ from stabilizer import Stabilizer
 # Miscellaneous detections (eyes/ mouth...)
 from facial_features import FacialFeatures, Eyes
 
-# global variable
-port = 5066         # have to be same as unity
 
 # init TCP connection with unity
 # return the socket connected
-def init_TCP():
-    address = ('127.0.0.1', port)
-    # address = ('192.168.0.107', port)
+def init_tcp(host: str, port: int) -> socket.SocketIO:
+    address = (host, port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # print(socket.gethostbyname(socket.gethostname()))
     s.connect(address)
     return s
+
 
 def send_info_to_unity(s, args):
     msg = '%.4f ' * len(args) % args
     print(msg)
     s.send(bytes(msg, "utf-8"))
 
-def main():
 
-    cap = cv2.VideoCapture(args.cam)
+def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
+    cap = cv2.VideoCapture(cam)
 
     # Facemesh
     detector = FaceMeshDetector()
@@ -73,10 +71,9 @@ def main():
         cov_measure=0.1
     )
 
-
     # Initialize TCP connection
-    if args.connect:
-        socket = init_TCP()
+    if connect:
+        socket = init_tcp(host, port)
 
     while cap.isOpened():
         success, img = cap.read()
@@ -109,7 +106,6 @@ def main():
 
             x_left, y_left, x_ratio_left, y_ratio_left = FacialFeatures.detect_iris(img, faces[0], Eyes.LEFT)
             x_right, y_right, x_ratio_right, y_ratio_right = FacialFeatures.detect_iris(img, faces[0], Eyes.RIGHT)
-
 
             ear_left = FacialFeatures.eye_aspect_ratio(image_points, Eyes.LEFT)
             ear_right = FacialFeatures.eye_aspect_ratio(image_points, Eyes.RIGHT)
@@ -163,7 +159,7 @@ def main():
             # print("MAR: %.2f; Mouth Distance: %.2f" % (mar, steady_mouth_dist))
 
             # send info to unity
-            if args.connect:
+            if connect:
 
                 # for sending to live2d model (Hiyori)
                 send_info_to_unity(socket,
@@ -182,8 +178,7 @@ def main():
             # reset our pose estimator
             pose_estimator = PoseEstimator((img_facemesh.shape[0], img_facemesh.shape[1]))
 
-
-        if args.debug:
+        if debug:
             cv2.imshow('Facial landmark', img_facemesh)
 
         # press "q" to leave
@@ -194,8 +189,16 @@ def main():
 
 
 if __name__ == "__main__":
-
     parser = ArgumentParser()
+
+    parser.add_argument("--host",
+                        help="host to connect to for driving animations",
+                        default="127.0.01")
+
+    parser.add_argument("--port", type=int,
+                        help="which port to connect to for driving animations",
+                        default=5066)
+
     parser.add_argument("--cam", type=int,
                         help="specify the camera number if you have multiple cameras",
                         default=0)
@@ -209,5 +212,4 @@ if __name__ == "__main__":
                         default=False)
     args = parser.parse_args()
 
-    # demo code
-    main()
+    main(args.host, args.port, args.cam, args.connect, args.debug)
