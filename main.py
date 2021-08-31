@@ -3,6 +3,7 @@ Main program to run the detection
 """
 
 import socket
+import time
 from argparse import ArgumentParser
 from typing import Optional
 
@@ -31,7 +32,9 @@ def send_info_to_unity(s: socket, **kwargs):
     s.send(bytes(msg, "utf-8"))
 
 
-def _compute_pose(cap: cv2.VideoCapture, pose_estimator: PoseEstimator, image_points: np.ndarray, s: Optional[socket.SocketIO], debug: bool) -> None:
+def _compute_pose(cap: cv2.VideoCapture, max_capture_fps: int, pose_estimator: PoseEstimator, image_points: np.ndarray, s: Optional[socket.SocketIO], debug: bool) -> None:
+    last_run = 0
+    min_capture_period = 1 / max_capture_fps
     detector = FaceMeshDetector()
 
     # Scalar stabilizers for pose.
@@ -55,6 +58,11 @@ def _compute_pose(cap: cv2.VideoCapture, pose_estimator: PoseEstimator, image_po
     )
 
     while cap.isOpened():
+        now = time.time()
+        if (now - last_run) < min_capture_period:
+            time.sleep(now - last_run)
+        last_run = now
+
         success, img = cap.read()
 
         if not success:
@@ -173,7 +181,7 @@ def _compute_pose(cap: cv2.VideoCapture, pose_estimator: PoseEstimator, image_po
             break
 
 
-def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
+def main(host: str, port: int, cam: int, max_capture_fps: int, connect: bool, debug: bool) -> None:
     cap = cv2.VideoCapture(cam)
 
     # get a sample frame for pose estimation img
@@ -189,7 +197,7 @@ def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
         s = init_tcp(host, port)
 
     try:
-        _compute_pose(cap, pose_estimator, image_points, s, debug)
+        _compute_pose(cap, max_capture_fps, pose_estimator, image_points, s, debug)
     finally:
         if s is not None:
             s.close()
@@ -215,9 +223,13 @@ if __name__ == "__main__":
                         help="connect to unity character",
                         default=False)
 
+    parser.add_argument("--max-capture-fps", type=int,
+                        help="max capture framerate",
+                        default=30)
+
     parser.add_argument("--debug", action="store_true",
                         help="showing the camera's image for debugging",
                         default=False)
     args = parser.parse_args()
 
-    main(args.host, args.port, args.cam, args.connect, args.debug)
+    main(args.host, args.port, args.cam, args.max_capture_fps, args.connect, args.debug)
