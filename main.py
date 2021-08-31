@@ -187,7 +187,7 @@ if __name__ == "__main__":
 
     parser.add_argument("--host",
                         help="host to connect to for driving animations",
-                        default="127.0.01")
+                        default="127.0.0.1")
 
     parser.add_argument("--port", type=int,
                         help="which port to connect to for driving animations",
