@@ -51,7 +51,7 @@ public class HiyoriController : MonoBehaviour, IAvatar
     // Update is called once per frame
     void Update()
     {
-        print(string.Format("Roll: {0:F}; Pitch: {1:F}; Yaw: {2:F}", state.roll, state.pitch, state.yaw));
+//        print(string.Format("Roll: {0:F}; Pitch: {1:F}; Yaw: {2:F}", state.roll, state.pitch, state.yaw));
 
         // control the blush of the avatar
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
@@ -102,7 +102,6 @@ public class HiyoriController : MonoBehaviour, IAvatar
 
         if (change_mouth_form)
             MouthForm();
-
     }
 
     // whole body movement (body X/Z)
