@@ -1,5 +1,12 @@
-Assets
-build
+dist/
+unity/build/
+unity/obj/
+# Download manually, just in case
+unity/Assets/Live2D/
+unity/Library/
+unity/Logs/
+unity/Packages/
+unity/Temp/
+unity/UserSettings/
 main_*
-dist
 main-*
