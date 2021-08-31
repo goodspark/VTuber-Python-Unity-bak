@@ -62,11 +62,6 @@ public class HiyoriController : MonoBehaviour, ISaveable
         abs_body_roll_yaw_max = Mathf.Abs(abs_body_roll_yaw_max);
 
         InitTCP();
-
-        // Load saved JSON data at start
-        GameObject.FindWithTag("GameController").GetComponent<UISystem>().LoadData();
-        GameObject.FindWithTag("GameController").GetComponent<UISystem>().InitUI();
-
     }
 
     // Launch TCP to receive message from python

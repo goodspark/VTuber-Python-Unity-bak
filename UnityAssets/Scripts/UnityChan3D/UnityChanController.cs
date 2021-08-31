@@ -63,9 +63,6 @@ public class UnityChanController : MonoBehaviour, ISaveable
         autoBlinkScript.enabled = isAutoBlinkActive;
         SetEyes(eye_ratio_open);
 
-        GameObject.FindWithTag("GameController").GetComponent<UISystem>().LoadData();
-        GameObject.FindWithTag("GameController").GetComponent<UISystem>().InitUI();
-
         InitTCP();
     }
 
