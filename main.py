@@ -30,8 +30,8 @@ def init_tcp(host: str, port: int) -> socket.SocketIO:
     return s
 
 
-def send_info_to_unity(s, args):
-    msg = '%.4f ' * len(args) % args
+def send_info_to_unity(s: socket, data):
+    msg = '%.4f ' * len(data) % data
     print(msg)
     s.send(bytes(msg, "utf-8"))
 
@@ -73,7 +73,7 @@ def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
 
     # Initialize TCP connection
     if connect:
-        socket = init_tcp(host, port)
+        s = init_tcp(host, port)
 
     while cap.isOpened():
         success, img = cap.read()
@@ -162,7 +162,7 @@ def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
             if connect:
 
                 # for sending to live2d model (Hiyori)
-                send_info_to_unity(socket,
+                send_info_to_unity(s,
                     (roll, pitch, yaw,
                     ear_left, ear_right, x_ratio_left, y_ratio_left, x_ratio_right, y_ratio_right,
                     mar, mouth_distance)
