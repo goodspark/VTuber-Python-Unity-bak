@@ -5,6 +5,7 @@ For finding the face and face landmarks for further manipulication
 import cv2
 import mediapipe as mp
 
+
 class FaceMeshDetector:
     def __init__(self,
                  static_image_mode=False,

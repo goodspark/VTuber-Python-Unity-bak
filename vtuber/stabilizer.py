@@ -7,6 +7,7 @@ import numpy as np
 
 import cv2
 
+
 class Stabilizer:
     """Using Kalman filter as a point stabilizer."""
 
