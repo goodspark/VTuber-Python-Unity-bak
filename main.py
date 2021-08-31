@@ -4,6 +4,7 @@ Main program to run the detection
 
 import socket
 from argparse import ArgumentParser
+from typing import Optional
 
 import cv2
 import numpy as np
@@ -24,50 +25,34 @@ def init_tcp(host: str, port: int) -> socket.SocketIO:
     return s
 
 
-def send_info_to_unity(s: socket, data):
-    msg = '%.4f ' * len(data) % data
-    print(msg)
+def send_info_to_unity(s: socket, **kwargs):
+    msg = ' '.join(f'{v:.4f}' for v in kwargs.values())
+    print(kwargs)
     s.send(bytes(msg, "utf-8"))
 
 
-def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
-    cap = cv2.VideoCapture(cam)
-
-    # Facemesh
+def _compute_pose(cap: cv2.VideoCapture, pose_estimator: PoseEstimator, image_points: np.ndarray, s: Optional[socket.SocketIO], debug: bool) -> None:
     detector = FaceMeshDetector()
 
-    # get a sample frame for pose estimation img
-    success, img = cap.read()
-
-    # Pose estimation related
-    pose_estimator = PoseEstimator((img.shape[0], img.shape[1]))
-    image_points = np.zeros((pose_estimator.model_points_full.shape[0], 2))
-
-    # Introduce scalar stabilizers for pose.
+    # Scalar stabilizers for pose.
     pose_stabilizers = [Stabilizer(
         state_num=2,
         measure_num=1,
         cov_process=0.1,
-        cov_measure=0.1) for _ in range(6)]
-
-    # for eyes
+        cov_measure=0.1
+    ) for _ in range(6)]
     eyes_stabilizers = [Stabilizer(
         state_num=2,
         measure_num=1,
         cov_process=0.1,
-        cov_measure=0.1) for _ in range(6)]
-
-    # for mouth_dist
+        cov_measure=0.1
+    ) for _ in range(6)]
     mouth_dist_stabilizer = Stabilizer(
         state_num=2,
         measure_num=1,
         cov_process=0.1,
         cov_measure=0.1
     )
-
-    # Initialize TCP connection
-    if connect:
-        s = init_tcp(host, port)
 
     while cap.isOpened():
         success, img = cap.read()
@@ -144,7 +129,7 @@ def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
             # yaw: +ve when we look left
             roll = np.clip(np.degrees(steady_pose[0][1]), -90, 90)
             pitch = np.clip(-(180 + np.degrees(steady_pose[0][0])), -90, 90)
-            yaw =  np.clip(np.degrees(steady_pose[0][2]), -90, 90)
+            yaw = np.clip(np.degrees(steady_pose[0][2]), -90, 90)
 
             # print("Roll: %.2f, Pitch: %.2f, Yaw: %.2f" % (roll, pitch, yaw))
             # print("left eye: %.2f, %.2f; right eye %.2f, %.2f"
@@ -153,13 +138,21 @@ def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
             # print("MAR: %.2f; Mouth Distance: %.2f" % (mar, steady_mouth_dist))
 
             # send info to unity
-            if connect:
-
+            if s is not None:
                 # for sending to live2d model (Hiyori)
-                send_info_to_unity(s,
-                    (roll, pitch, yaw,
-                    ear_left, ear_right, x_ratio_left, y_ratio_left, x_ratio_right, y_ratio_right,
-                    mar, mouth_distance)
+                send_info_to_unity(
+                    s,
+                    roll=roll,
+                    pitch=pitch,
+                    yaw=yaw,
+                    ear_left=ear_left,
+                    ear_right=ear_right,
+                    x_ratio_left=x_ratio_left,
+                    y_ratio_left=y_ratio_left,
+                    x_ratio_right=x_ratio_right,
+                    y_ratio_right=y_ratio_right,
+                    mar=mar,
+                    mouth_distance=mouth_distance,
                 )
 
             # pose_estimator.draw_annotation_box(img, pose[0], pose[1], color=(255, 128, 128))
@@ -179,7 +172,28 @@ def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    cap.release()
+
+def main(host: str, port: int, cam: int, connect: bool, debug: bool) -> None:
+    cap = cv2.VideoCapture(cam)
+
+    # get a sample frame for pose estimation img
+    success, img = cap.read()
+
+    # Pose estimation related
+    pose_estimator = PoseEstimator((img.shape[0], img.shape[1]))
+    image_points = np.zeros((pose_estimator.model_points_full.shape[0], 2))
+
+    # Initialize TCP connection
+    s = None
+    if connect:
+        s = init_tcp(host, port)
+
+    try:
+        _compute_pose(cap, pose_estimator, image_points, s, debug)
+    finally:
+        if s is not None:
+            s.close()
+        cap.release()
 
 
 if __name__ == "__main__":
