@@ -36,39 +36,39 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\UnityChan\Editor\CreateLocatorHere.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\ComponentExtensionMethods.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismImporter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\CubismUnityEditorMenu.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Samples\Editor\ImportCustomization.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Samples\AsyncBenchmark\Editor\FrameRateUiHolderInspector.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismMaskControllerInspector.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismRendererInspector.cs" />
      <Compile Include="Assets\Live2D\Cubism\Plugins\Editor\CubismiOSPluginProcessor.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismMaskTextureInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\CubismCreatedAssetList.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismUserDataTagInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Framework\Expression\Editor\CubismExpression3JsonImporter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\CubismAssetProcessor.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismPartsInspectorInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\ICubismImporter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Framework\Pose\Editor\CubismPoseMotionImporter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismImporterBase.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Samples\Editor\ImportCustomization.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismParametersInspectorInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Framework\MotionFade\Editor\CubismFadeMotionImporter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Samples\AsyncBenchmark\Editor\FrameRateUiHolderInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\CubismUnityEditorUtility.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismLookControllerInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismMaskControllerInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismRendererInspector.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismModel3JsonImporter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismExpressionAssetDeleter.cs" />
+     <Compile Include="Assets\Avatars\UnityChan\Editor\CreateLocatorHere.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismDeleter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\ComponentExtensionMethods.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismAnimationClipDeleter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismMotion3JsonImporter.cs" />
+     <Compile Include="Assets\Live2D\Cubism\Editor\CubismUnityEditorMenu.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismDeleterBase.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismRenderControllerInspector.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Framework\Expression\Editor\CubismExpression3JsonImporter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismAnimationClipDeleter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\CubismAssetProcessor.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismMotion3JsonImporter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\AssetGuid.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismParametersInspectorInspector.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismPartsInspectorInspector.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismModel3JsonImporter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Framework\Pose\Editor\CubismPoseMotionImporter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\CubismOriginalWorkflowSettings.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismExpressionAssetDeleter.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismFadeAssetDeleter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\CubismCreatedAssetList.cs" />
      <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\ICubismDeleter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\CubismImporterBase.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\CubismUnityEditorUtility.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Importers\ICubismImporter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Inspectors\CubismLookControllerInspector.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Editor\Deleters\CubismDeleter.cs" />
-     <Compile Include="Assets\Live2D\Cubism\Framework\MotionFade\Editor\CubismFadeMotionImporter.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:/Program Files/Unity/Hub/Editor/2020.3.17f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
     </Reference>
