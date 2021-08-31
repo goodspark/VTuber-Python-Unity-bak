@@ -7,12 +7,25 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 
+class Avatar {
+    public GameObject obj;
+    public IAvatar controller;
+
+    public Avatar(GameObject obj, IAvatar controller) {
+        this.obj = obj;
+        this.controller = controller;
+    }
+
+    public static Avatar FromGameObject(GameObject obj) {
+        return new Avatar(obj, obj.GetComponent<IAvatar>());
+    }
+}
+
 public class AvatarController : MonoBehaviour
 {
     const string ToggleKey = "q";
 
-    GameObject[] avatars;
-    IAvatar[] avatarControllers;
+    Avatar[] avatars;
 
     // Avatar control interface
     Thread receiveThread;
@@ -63,7 +76,7 @@ public class AvatarController : MonoBehaviour
                             state.mouth_aspect_ratio = float.Parse(res[9]);
                             state.mouth_dist = float.Parse(res[10]);
 
-                            avatarControllers[currentAvatar].state = state;
+                            avatars[currentAvatar].controller.state = state;
                         }
                     }
                 }
@@ -85,19 +98,19 @@ public class AvatarController : MonoBehaviour
         currentAvatar = newIndex;
         for (var i = 0; i < avatars.Length; i++) {
             var avatar = avatars[i];
-            avatar.SetActive(i == newIndex);
+            avatar.obj.SetActive(i == newIndex);
         }
     }
 
     void Start()
     {
         if (avatars == null) {
-            avatars = GameObject.FindGameObjectsWithTag("Avatar");
-            avatarControllers = new IAvatar[avatars.Length];
+            var foundAvatars  = GameObject.FindGameObjectsWithTag("Avatar");
+            avatars = new Avatar[foundAvatars.Length];
             Debug.LogFormat("Found {0} avatars", avatars.Length);
-            for (var i = 0; i < avatars.Length; i++) {
-                Debug.LogFormat("Avatar: {0}", avatars[i].name);
-                avatarControllers[i] = avatars[i].GetComponent<IAvatar>();
+            for (var i = 0; i < foundAvatars.Length; i++) {
+                avatars[i] = Avatar.FromGameObject(foundAvatars[i]);
+                Debug.LogFormat("Avatar: {0}", avatars[i].obj.name);
             }
         }
 
