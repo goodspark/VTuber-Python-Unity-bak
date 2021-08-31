@@ -6,7 +6,7 @@ using UnityEngine;
 using Live2D.Cubism.Core;
 using Live2D.Cubism.Framework;
 
-public class HiyoriController : MonoBehaviour
+public class HiyoriController : MonoBehaviour, IAvatar
 {
 
     private CubismModel model;
@@ -40,6 +40,7 @@ public class HiyoriController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        state = new AvatarState();
         model = this.FindCubismModel();
 
         abs_body_roll_threshold = Mathf.Abs(abs_body_roll_threshold);
