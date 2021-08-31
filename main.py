@@ -10,10 +10,10 @@ from typing import Optional
 import cv2
 import numpy as np
 
-from facial_features import FacialFeatures, Eyes
-from facial_landmark import FaceMeshDetector
-from pose_estimator import PoseEstimator
-from stabilizer import Stabilizer
+from vtuber.facial_features import FacialFeatures, Eyes
+from vtuber.facial_landmark import FaceMeshDetector
+from vtuber.pose_estimator import PoseEstimator
+from vtuber.stabilizer import Stabilizer
 
 
 # init TCP connection with unity
