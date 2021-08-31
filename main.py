@@ -2,22 +2,16 @@
 Main program to run the detection
 """
 
+import socket
 from argparse import ArgumentParser
+
 import cv2
 import numpy as np
 
-# for TCP connection with unity
-import socket
-
-# face detection and facial landmark
+from facial_features import FacialFeatures, Eyes
 from facial_landmark import FaceMeshDetector
-
-# pose estimation and stablization
 from pose_estimator import PoseEstimator
 from stabilizer import Stabilizer
-
-# Miscellaneous detections (eyes/ mouth...)
-from facial_features import FacialFeatures, Eyes
 
 
 # init TCP connection with unity
