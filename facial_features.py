@@ -6,59 +6,62 @@ import cv2
 import numpy as np
 from enum import Enum
 
+
 class Eyes(Enum):
     LEFT = 1
     RIGHT = 2
 
+
 class FacialFeatures:
 
-    eye_key_indicies=[
+    eye_key_indicies = [
         [
-        # Left eye
-        # eye lower contour
-        33,
-        7,
-        163,
-        144,
-        145,
-        153,
-        154,
-        155,
-        133,
-        # eye upper contour (excluding corners)
-        246,
-        161,
-        160,
-        159,
-        158,
-        157,
-        173
+            # Left eye
+            # eye lower contour
+            33,
+            7,
+            163,
+            144,
+            145,
+            153,
+            154,
+            155,
+            133,
+            # eye upper contour (excluding corners)
+            246,
+            161,
+            160,
+            159,
+            158,
+            157,
+            173
         ],
         [
-        # Right eye
-        # eye lower contour
-        263,
-        249,
-        390,
-        373,
-        374,
-        380,
-        381,
-        382,
-        362,
-        # eye upper contour (excluding corners)
-        466,
-        388,
-        387,
-        386,
-        385,
-        384,
-        398
+            # Right eye
+            # eye lower contour
+            263,
+            249,
+            390,
+            373,
+            374,
+            380,
+            381,
+            382,
+            362,
+            # eye upper contour (excluding corners)
+            466,
+            388,
+            387,
+            386,
+            385,
+            384,
+            398
         ]
     ]
 
     # custom img resize function
-    def resize_img(img, scale_percent):
+    @classmethod
+    def resize_img(cls, img, scale_percent):
         width = int(img.shape[1] * scale_percent / 100.0)
         height = int(img.shape[0] * scale_percent / 100.0)
 
@@ -66,7 +69,8 @@ class FacialFeatures:
 
     # calculate eye apsect ratio to detect blinking
     # and/ or control closing/ opening of eye
-    def eye_aspect_ratio(image_points, side):
+    @classmethod
+    def eye_aspect_ratio(cls, image_points, side):
 
         p1, p2, p3, p4, p5, p6 = 0, 0, 0, 0, 0, 0
         tip_of_eyebrow = 0
@@ -125,7 +129,8 @@ class FacialFeatures:
     # calculate mouth aspect ratio to detect mouth movement
     # to control opening/ closing of mouth in avatar
     # https://miro.medium.com/max/1508/0*0rVqugQAUafxXYXE.jpg
-    def mouth_aspect_ratio(image_points):
+    @classmethod
+    def mouth_aspect_ratio(cls, image_points):
         p1 = image_points[78]
         p2 = image_points[81]
         p3 = image_points[13]
@@ -139,13 +144,14 @@ class FacialFeatures:
         mar /= (2 * np.linalg.norm(p1-p5) + 1e-6)
         return mar
 
-    def mouth_distance(image_points):
+    @classmethod
+    def mouth_distance(cls, image_points):
         p1 = image_points[78]
         p5 = image_points[308]
         return np.linalg.norm(p1-p5)
 
-
-    def detect_iris(img, marks, side):
+    @classmethod
+    def detect_iris(cls, img, marks, side):
         """
         return:
            x: the x coordinate of the iris in the input image.
@@ -234,5 +240,5 @@ class FacialFeatures:
 
             return x_center + (min_x - margin), y_center + (min_y - margin), x_ratio, y_ratio
 
-        except:
+        except Exception:
             return 0, 0, 0.5, 0.5
